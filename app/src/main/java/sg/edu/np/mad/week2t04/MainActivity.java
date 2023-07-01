@@ -15,22 +15,20 @@ import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
     final String TITLE = "Main Activity";
-    private int generateRanNum(){
-        Random ran = new Random();
-        int myNumber = ran.nextInt(999999);
-        return myNumber;
-    }
-    User user1;
+    User user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Log.v(TITLE, "On Create!");
-        user1 = new User("MAD "+generateRanNum(), "[Text]");
+        //user1 = new User("MAD "+generateRanNum(), "[Text]");
         TextView boldtext = findViewById(R.id.textView2);
         TextView normtext = findViewById(R.id.textView3);
-        boldtext.setText(user1.name);
-        normtext.setText(user1.description);
+
+        Intent intent = getIntent();
+        user = intent.getParcelableExtra("User");
+        boldtext.setText(user.name);
+        normtext.setText(user.description);
 
     }
 
@@ -50,18 +48,18 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume(){
         super.onResume();
         Log.v(TITLE, "On Resume!");
-        User myUser = new User();
+
         Button followButton = findViewById(R.id.button);
         followButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (myUser.followed == false){
-                    myUser.followed = true;
+                if (user.followed == false){
+                    user.followed = true;
                     followButton.setText("Unfollow");
                     Toast.makeText(getApplicationContext(), "Followed", Toast.LENGTH_SHORT).show();
                 }
                 else{
-                    myUser.followed = false;
+                    user.followed = false;
                     followButton.setText("Follow");
                     Toast.makeText(getApplicationContext(), "Unfollowed", Toast.LENGTH_SHORT).show();
                 }

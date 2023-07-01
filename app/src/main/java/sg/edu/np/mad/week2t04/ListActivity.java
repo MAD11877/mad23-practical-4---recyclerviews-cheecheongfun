@@ -2,6 +2,8 @@ package sg.edu.np.mad.week2t04;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
@@ -14,61 +16,37 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class ListActivity extends AppCompatActivity {
-    private ImageButton imageButton;
+
     String title = "Main Activity";
+    private List<User> userList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
         Log.v(title, "Create");
-    }
-
-    @Override
-    protected void onStart(){
-        super.onStart();
-        Log.v(title,"Start");
-    }
 
 
-    @Override
-    protected void onResume(){
-        super.onResume();
-        Log.v(title,"Resume");
-        imageButton = findViewById(R.id.imageView3);
-        imageButton.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                showProfileDialog();
-            }
-        });
+        userList = new ArrayList<>();
 
-    }
-    private void showProfileDialog(){
-        AlertDialog.Builder builder = new AlertDialog.Builder(ListActivity.this);
-        builder.setTitle("Profile");
-        builder.setMessage("MADness");
+        Random random = new Random();
+        for (int i = 0; i<20; i++){
+            String name = "Name"+(random.nextInt(100000));
+            String description = "Description:"+(random.nextInt(100000));
+            boolean followed = random.nextBoolean();
+            userList.add(new User(name, description, (i+2), followed));
+        }
+        RecyclerView recyclerView = findViewById(R.id.reclcyerView);
+        LinearLayoutManager myLayoutManager = new LinearLayoutManager(this);
+        MyAdapter myAdapter = new MyAdapter(userList,this);
 
-        builder.setPositiveButton("View", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Intent intent = new Intent(ListActivity.this, MainActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        builder.setNegativeButton("Close", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-
-        AlertDialog dialog = builder.create();
-        dialog.show();
+        recyclerView.setLayoutManager(myLayoutManager);
+        recyclerView.setAdapter(myAdapter);
     }
 }
 
